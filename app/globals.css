@@ -1,0 +1,352 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+/* =============================================
+   PRONTÍSSIMA — Luxury Atelier Design System
+   ============================================= */
+
+:root {
+  /* Luxury Palette — Burgundy & Champagne */
+  --wine: 72 12 38;          /* #480C26 — deep wine */
+  --burgundy: 92 31 51;      /* #5C1F33 — primary brand */
+  --rose-dark: 122 41 68;    /* #7A2944 — hover states */
+  --champagne: 247 241 233;  /* #F7F1E9 — warm white */
+  --cream: 253 249 245;      /* #FDF9F5 — background */
+  --parchment: 232 223 214;  /* #E8DFD6 — borders */
+  --taupe: 201 184 168;      /* #C9B8A8 — muted accents */
+  --espresso: 62 38 30;      /* #3E261E — dark text */
+  --gold: 184 134 11;        /* #B8860B — luxury accent */
+  --gold-bright: 255 215 0;  /* #FFD700 — CTA highlight */
+
+  /* shadcn/ui tokens mapped to luxury palette */
+  --background: var(--cream);
+  --foreground: var(--espresso);
+  --card: 255 255 255;
+  --card-foreground: var(--espresso);
+  --popover: 255 255 255;
+  --popover-foreground: var(--espresso);
+  --primary: var(--burgundy);
+  --primary-foreground: var(--champagne);
+  --secondary: var(--taupe);
+  --secondary-foreground: var(--espresso);
+  --muted: var(--champagne);
+  --muted-foreground: 140 120 105;
+  --accent: var(--parchment);
+  --accent-foreground: var(--espresso);
+  --destructive: 200 30 30;
+  --destructive-foreground: 255 255 255;
+  --border: var(--parchment);
+  --input: var(--champagne);
+  --ring: var(--burgundy);
+  --radius: 0.75rem;
+
+  /* Chart colors */
+  --chart-1: oklch(0.646 0.222 41.116);
+  --chart-2: oklch(0.6 0.118 184.704);
+  --chart-3: oklch(0.398 0.07 227.392);
+  --chart-4: oklch(0.828 0.189 84.429);
+  --chart-5: oklch(0.769 0.188 70.08);
+
+  /* Sidebar */
+  --sidebar: oklch(0.985 0 0);
+  --sidebar-foreground: oklch(0.145 0 0);
+  --sidebar-primary: oklch(0.205 0 0);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.97 0 0);
+  --sidebar-accent-foreground: oklch(0.205 0 0);
+  --sidebar-border: oklch(0.922 0 0);
+  --sidebar-ring: oklch(0.708 0 0);
+}
+
+.dark {
+  --background: 22 18 16;
+  --foreground: var(--champagne);
+  --card: 30 24 20;
+  --card-foreground: var(--champagne);
+  --popover: 30 24 20;
+  --popover-foreground: var(--champagne);
+  --primary: var(--champagne);
+  --primary-foreground: var(--espresso);
+  --secondary: 50 40 35;
+  --secondary-foreground: var(--champagne);
+  --muted: 50 40 35;
+  --muted-foreground: 160 145 130;
+  --accent: 50 40 35;
+  --accent-foreground: var(--champagne);
+  --destructive: 127 29 29;
+  --destructive-foreground: 254 242 242;
+  --border: 50 40 35;
+  --input: 50 40 35;
+  --ring: 140 120 105;
+}
+
+/* =============================================
+   Theme mapping for Tailwind v4
+   ============================================= */
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+}
+
+/* =============================================
+   Base Styles
+   ============================================= */
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-family: var(--font-body), system-ui, sans-serif;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-display), Georgia, serif;
+    letter-spacing: -0.02em;
+  }
+}
+
+/* =============================================
+   Animation Keyframes
+   ============================================= */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideInRight {
+  from { opacity: 0; transform: translateX(32px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes slideInLeft {
+  from { opacity: 0; transform: translateX(-32px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+@keyframes breathe {
+  0%, 100% { transform: scale(1); opacity: 0.9; }
+  50% { transform: scale(1.02); opacity: 1; }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+@keyframes pulseGlow {
+  0%, 100% { box-shadow: 0 0 20px rgba(184, 134, 11, 0.15); }
+  50% { box-shadow: 0 0 40px rgba(184, 134, 11, 0.3); }
+}
+
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.92); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes revealDown {
+  from { opacity: 0; transform: translateY(-16px) scaleY(0.95); }
+  to { opacity: 1; transform: translateY(0) scaleY(1); }
+}
+
+/* =============================================
+   Utility Classes
+   ============================================= */
+
+/* Staggered entrance animations */
+.anim-fade-up {
+  animation: fadeUp 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.anim-fade-in {
+  animation: fadeIn 0.6s ease both;
+}
+.anim-slide-right {
+  animation: slideInRight 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.anim-scale-in {
+  animation: scaleIn 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.anim-reveal-down {
+  animation: revealDown 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* Stagger delays */
+.delay-1 { animation-delay: 0.1s; }
+.delay-2 { animation-delay: 0.2s; }
+.delay-3 { animation-delay: 0.3s; }
+.delay-4 { animation-delay: 0.4s; }
+.delay-5 { animation-delay: 0.5s; }
+.delay-6 { animation-delay: 0.6s; }
+.delay-7 { animation-delay: 0.7s; }
+
+/* Gold shimmer effect for CTAs */
+.gold-shimmer {
+  background: linear-gradient(
+    110deg,
+    #B8860B 0%,
+    #FFD700 25%,
+    #DAA520 50%,
+    #FFD700 75%,
+    #B8860B 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 3s ease-in-out infinite;
+  color: #3E261E;
+}
+
+/* Breathing glow for primary buttons */
+.btn-glow {
+  animation: pulseGlow 3s ease-in-out infinite;
+}
+
+/* Float animation */
+.anim-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+/* Breathe animation */
+.anim-breathe {
+  animation: breathe 4s ease-in-out infinite;
+}
+
+/* Glass card effect */
+.glass-card {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(232, 223, 214, 0.6);
+  box-shadow:
+    0 4px 24px rgba(62, 38, 30, 0.06),
+    0 1px 3px rgba(62, 38, 30, 0.04);
+}
+
+/* Premium card with depth */
+.luxury-card {
+  background: white;
+  border: 1px solid rgba(232, 223, 214, 0.8);
+  box-shadow:
+    0 1px 2px rgba(62, 38, 30, 0.04),
+    0 4px 16px rgba(62, 38, 30, 0.06),
+    0 12px 48px rgba(62, 38, 30, 0.04);
+  border-radius: 1.25rem;
+}
+
+/* Grain noise overlay */
+.grain-overlay::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.025;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 200px;
+}
+
+/* Wine gradient background */
+.bg-wine-gradient {
+  background: linear-gradient(172deg, #480C26 0%, #5C1F33 40%, #3E261E 100%);
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(201, 184, 168, 0.5);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(201, 184, 168, 0.8);
+}
+
+/* Hover lift */
+.hover-lift {
+  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.3s ease;
+}
+.hover-lift:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px rgba(62, 38, 30, 0.1);
+}
+
+/* Active press */
+.press {
+  transition: transform 0.15s ease;
+}
+.press:active {
+  transform: scale(0.97);
+}
+
+/* Brand text gradient */
+.text-brand-gradient {
+  background: linear-gradient(135deg, #B8860B, #FFD700, #DAA520);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Decorative line */
+.luxury-divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(201, 184, 168, 0.6), transparent);
+}
+
+/* Input focus ring — gold glow */
+.input-luxury {
+  transition: all 0.3s ease;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+.input-luxury:focus {
+  border-color: rgba(184, 134, 11, 0.5);
+  box-shadow: 0 0 0 3px rgba(184, 134, 11, 0.15), 0 0 20px rgba(184, 134, 11, 0.08);
+  outline: none;
+}
