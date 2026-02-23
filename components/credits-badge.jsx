@@ -5,22 +5,22 @@ import { Sparkles } from "lucide-react"
 import { userStorage } from "@/lib/user-storage"
 
 export default function CreditsBadge() {
-  const [credits, setCredits] = useState(null)
+  const [total, setTotal] = useState(null)
 
   useEffect(() => {
     const user = userStorage.getUser()
-    if (user) {
-      setCredits(user.credits)
+    if (user?.credits) {
+      setTotal((user.credits.plan || 0) + (user.credits.packs || 0))
     }
   }, [])
 
-  if (credits === null) return null
+  if (total === null) return null
 
   return (
-    <div className="inline-flex items-center gap-2 px-4 py-2 bg-white border border-neutral-200 rounded-full shadow-sm">
+    <div className="inline-flex items-center gap-2 px-4 py-2 bg-white border border-[#E8DFD6] rounded-full shadow-sm">
       <Sparkles className="w-4 h-4 text-[#5C1F33]" />
-      <span className="text-sm font-medium text-neutral-900">
-        {credits} {credits === 1 ? "crédito" : "créditos"}
+      <span className="text-sm font-medium text-[#3E261E]">
+        {total} {total === 1 ? "crédito" : "créditos"}
       </span>
     </div>
   )

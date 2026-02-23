@@ -2,7 +2,6 @@ import type React from "react"
 import type { Metadata } from "next"
 import { Cormorant_Garamond, DM_Sans } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
-import DevButton from "@/components/dev-button"
 import "./globals.css"
 
 const displayFont = Cormorant_Garamond({
@@ -56,10 +55,9 @@ export const metadata: Metadata = {
   manifest: "/manifest.json",
   icons: {
     icon: [
-      { url: "/images/icon-192.jpg", sizes: "192x192", type: "image/png" },
-      { url: "/images/icon-512.jpg", sizes: "512x512", type: "image/png" },
+      { url: "/icon-dark-32x32.png", sizes: "32x32", type: "image/png" },
     ],
-    apple: [{ url: "/images/icon-192.jpg", sizes: "192x192", type: "image/png" }],
+    apple: [{ url: "/apple-icon.png", type: "image/png" }],
   },
 }
 
@@ -84,12 +82,10 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         <meta name="apple-mobile-web-app-title" content="Prontíssima" />
-        <link rel="apple-touch-icon" href="/images/icon-192.jpg" />
-        <link rel="apple-touch-startup-image" href="/images/icon-512.jpg" />
+        <link rel="apple-touch-icon" href="/apple-icon.png" />
       </head>
       <body className="font-sans antialiased grain-overlay">
         {children}
-        <DevButton />
         <Analytics />
       </body>
     </html>
