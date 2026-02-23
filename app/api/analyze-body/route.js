@@ -1,8 +1,9 @@
 import OpenAI from "openai"
 
-const client = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-})
+// Lazy init — avoid crashing at build time when OPENAI_API_KEY is absent
+function getClient() {
+  return new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
+}
 
 /**
  * FALLBACK OBRIGATÓRIO
@@ -59,7 +60,7 @@ export async function POST(req) {
         // ETAPA 1 — VISION (ULTRA LEVE)
         // ===============================
         console.log("[v0] 🔍 Chamando Vision API...")
-        const visionResponse = await client.chat.completions.create({
+        const visionResponse = await getClient().chat.completions.create({
           model: "gpt-4o-mini",
           messages: [
             {
@@ -123,7 +124,7 @@ Return JSON only.
     // ETAPA 2 — GPT TEXTO (SEM IMAGEM)
     // ===============================
     console.log("[v0] 🎨 Chamando GPT Stylist...")
-    const stylistResponse = await client.chat.completions.create({
+    const stylistResponse = await getClient().chat.completions.create({
       model: "gpt-4o-mini",
       messages: [
         {
