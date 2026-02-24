@@ -9,16 +9,26 @@
 
 :root {
   /* Luxury Palette — Burgundy & Champagne */
-  --wine: 72 12 38;          /* #480C26 — deep wine */
-  --burgundy: 92 31 51;      /* #5C1F33 — primary brand */
-  --rose-dark: 122 41 68;    /* #7A2944 — hover states */
-  --champagne: 247 241 233;  /* #F7F1E9 — warm white */
-  --cream: 253 249 245;      /* #FDF9F5 — background */
-  --parchment: 232 223 214;  /* #E8DFD6 — borders */
-  --taupe: 201 184 168;      /* #C9B8A8 — muted accents */
-  --espresso: 62 38 30;      /* #3E261E — dark text */
-  --gold: 184 134 11;        /* #B8860B — luxury accent */
-  --gold-bright: 255 215 0;  /* #FFD700 — CTA highlight */
+  --wine: 72 12 38;
+  /* #480C26 — deep wine */
+  --burgundy: 92 31 51;
+  /* #5C1F33 — primary brand */
+  --rose-dark: 122 41 68;
+  /* #7A2944 — hover states */
+  --champagne: 247 241 233;
+  /* #F7F1E9 — warm white */
+  --cream: 253 249 245;
+  /* #FDF9F5 — background */
+  --parchment: 232 223 214;
+  /* #E8DFD6 — borders */
+  --taupe: 201 184 168;
+  /* #C9B8A8 — muted accents */
+  --espresso: 62 38 30;
+  /* #3E261E — dark text */
+  --gold: 184 134 11;
+  /* #B8860B — luxury accent */
+  --gold-bright: 255 215 0;
+  /* #FFD700 — CTA highlight */
 
   /* shadcn/ui tokens mapped to luxury palette */
   --background: var(--cream);
@@ -131,11 +141,18 @@
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
     @apply bg-background text-foreground antialiased;
     font-family: var(--font-body), system-ui, sans-serif;
   }
-  h1, h2, h3, h4, h5, h6 {
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     font-family: var(--font-display), Georgia, serif;
     letter-spacing: -0.02em;
   }
@@ -145,53 +162,121 @@
    Animation Keyframes
    ============================================= */
 @keyframes fadeUp {
-  from { opacity: 0; transform: translateY(24px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes slideInRight {
-  from { opacity: 0; transform: translateX(32px); }
-  to { opacity: 1; transform: translateX(0); }
+  from {
+    opacity: 0;
+    transform: translateX(32px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 
 @keyframes slideInLeft {
-  from { opacity: 0; transform: translateX(-32px); }
-  to { opacity: 1; transform: translateX(0); }
+  from {
+    opacity: 0;
+    transform: translateX(-32px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 
 @keyframes shimmer {
-  0% { background-position: -200% center; }
-  100% { background-position: 200% center; }
+  0% {
+    background-position: -200% center;
+  }
+
+  100% {
+    background-position: 200% center;
+  }
 }
 
 @keyframes breathe {
-  0%, 100% { transform: scale(1); opacity: 0.9; }
-  50% { transform: scale(1.02); opacity: 1; }
+
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.9;
+  }
+
+  50% {
+    transform: scale(1.02);
+    opacity: 1;
+  }
 }
 
 @keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-6px); }
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-6px);
+  }
 }
 
 @keyframes pulseGlow {
-  0%, 100% { box-shadow: 0 0 20px rgba(184, 134, 11, 0.15); }
-  50% { box-shadow: 0 0 40px rgba(184, 134, 11, 0.3); }
+
+  0%,
+  100% {
+    box-shadow: 0 0 20px rgba(184, 134, 11, 0.15);
+  }
+
+  50% {
+    box-shadow: 0 0 40px rgba(184, 134, 11, 0.3);
+  }
 }
 
 @keyframes scaleIn {
-  from { opacity: 0; transform: scale(0.92); }
-  to { opacity: 1; transform: scale(1); }
+  from {
+    opacity: 0;
+    transform: scale(0.92);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
 @keyframes revealDown {
-  from { opacity: 0; transform: translateY(-16px) scaleY(0.95); }
-  to { opacity: 1; transform: translateY(0) scaleY(1); }
+  from {
+    opacity: 0;
+    transform: translateY(-16px) scaleY(0.95);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scaleY(1);
+  }
 }
 
 /* =============================================
@@ -202,38 +287,60 @@
 .anim-fade-up {
   animation: fadeUp 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
+
 .anim-fade-in {
   animation: fadeIn 0.6s ease both;
 }
+
 .anim-slide-right {
   animation: slideInRight 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
+
 .anim-scale-in {
   animation: scaleIn 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
+
 .anim-reveal-down {
   animation: revealDown 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 /* Stagger delays */
-.delay-1 { animation-delay: 0.1s; }
-.delay-2 { animation-delay: 0.2s; }
-.delay-3 { animation-delay: 0.3s; }
-.delay-4 { animation-delay: 0.4s; }
-.delay-5 { animation-delay: 0.5s; }
-.delay-6 { animation-delay: 0.6s; }
-.delay-7 { animation-delay: 0.7s; }
+.delay-1 {
+  animation-delay: 0.1s;
+}
+
+.delay-2 {
+  animation-delay: 0.2s;
+}
+
+.delay-3 {
+  animation-delay: 0.3s;
+}
+
+.delay-4 {
+  animation-delay: 0.4s;
+}
+
+.delay-5 {
+  animation-delay: 0.5s;
+}
+
+.delay-6 {
+  animation-delay: 0.6s;
+}
+
+.delay-7 {
+  animation-delay: 0.7s;
+}
 
 /* Gold shimmer effect for CTAs */
 .gold-shimmer {
-  background: linear-gradient(
-    110deg,
-    #B8860B 0%,
-    #FFD700 25%,
-    #DAA520 50%,
-    #FFD700 75%,
-    #B8860B 100%
-  );
+  background: linear-gradient(110deg,
+      #B8860B 0%,
+      #FFD700 25%,
+      #DAA520 50%,
+      #FFD700 75%,
+      #B8860B 100%);
   background-size: 200% 100%;
   animation: shimmer 3s ease-in-out infinite;
   color: #3E261E;
@@ -298,13 +405,16 @@
 ::-webkit-scrollbar {
   width: 6px;
 }
+
 ::-webkit-scrollbar-track {
   background: transparent;
 }
+
 ::-webkit-scrollbar-thumb {
   background: rgba(201, 184, 168, 0.5);
   border-radius: 3px;
 }
+
 ::-webkit-scrollbar-thumb:hover {
   background: rgba(201, 184, 168, 0.8);
 }
@@ -313,6 +423,7 @@
 .hover-lift {
   transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.3s ease;
 }
+
 .hover-lift:hover {
   transform: translateY(-2px);
   box-shadow: 0 8px 32px rgba(62, 38, 30, 0.1);
@@ -322,6 +433,7 @@
 .press {
   transition: transform 0.15s ease;
 }
+
 .press:active {
   transform: scale(0.97);
 }
@@ -345,8 +457,19 @@
   transition: all 0.3s ease;
   border: 1px solid rgba(255, 255, 255, 0.15);
 }
+
 .input-luxury:focus {
   border-color: rgba(184, 134, 11, 0.5);
   box-shadow: 0 0 0 3px rgba(184, 134, 11, 0.15), 0 0 20px rgba(184, 134, 11, 0.08);
   outline: none;
+}
+
+/* Safe area for notched devices */
+.pb-safe {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+/* Bottom nav spacing — ensures content doesn't hide behind the nav */
+.has-bottom-nav {
+  padding-bottom: 5rem;
 }

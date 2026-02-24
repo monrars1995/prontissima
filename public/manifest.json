@@ -1,0 +1,37 @@
+{
+    "name": "Prontíssima — Seu estilo, elevado",
+    "short_name": "Prontíssima",
+    "description": "Transforme seu guarda-roupa em looks incríveis com inteligência artificial",
+    "start_url": "/dashboard",
+    "display": "standalone",
+    "orientation": "portrait",
+    "background_color": "#FDF9F5",
+    "theme_color": "#5C1F33",
+    "categories": [
+        "lifestyle",
+        "fashion"
+    ],
+    "lang": "pt-BR",
+    "icons": [
+        {
+            "src": "/apple-icon.png",
+            "sizes": "180x180",
+            "type": "image/png",
+            "purpose": "any"
+        },
+        {
+            "src": "/icon-192.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "any maskable"
+        },
+        {
+            "src": "/icon-512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "any maskable"
+        }
+    ],
+    "screenshots": [],
+    "prefer_related_applications": false
+}

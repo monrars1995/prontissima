@@ -74,7 +74,7 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#FDF9F5] relative">
+    <div className="min-h-screen bg-[#FDF9F5] relative pb-20">
       {/* Ambient gradient */}
       <div className="absolute top-0 left-0 right-0 h-80 pointer-events-none"
         style={{ background: "linear-gradient(180deg, rgba(92,31,51,0.06) 0%, rgba(184,134,11,0.02) 40%, transparent 100%)" }}

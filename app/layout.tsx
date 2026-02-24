@@ -2,6 +2,9 @@ import type React from "react"
 import type { Metadata } from "next"
 import { Cormorant_Garamond, DM_Sans } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
+import ServiceWorkerRegistration from "@/components/sw-register"
+import InstallPrompt from "@/components/install-prompt"
+import BottomNav from "@/components/bottom-nav"
 import "./globals.css"
 
 const displayFont = Cormorant_Garamond({
@@ -56,6 +59,8 @@ export const metadata: Metadata = {
   icons: {
     icon: [
       { url: "/icon-dark-32x32.png", sizes: "32x32", type: "image/png" },
+      { url: "/icon-192.png", sizes: "192x192", type: "image/png" },
+      { url: "/icon-512.png", sizes: "512x512", type: "image/png" },
     ],
     apple: [{ url: "/apple-icon.png", type: "image/png" }],
   },
@@ -86,6 +91,9 @@ export default function RootLayout({
       </head>
       <body className="font-sans antialiased grain-overlay">
         {children}
+        <BottomNav />
+        <ServiceWorkerRegistration />
+        <InstallPrompt />
         <Analytics />
       </body>
     </html>
