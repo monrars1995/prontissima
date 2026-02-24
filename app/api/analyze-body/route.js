@@ -17,15 +17,31 @@ const FALLBACK_VISION_DATA = {
   hip_width: "average",
 }
 
+// Valida campos do resultado vision
+function validateVisionData(data) {
+  const validBodyTypes = ["pear", "hourglass", "rectangle", "inverted_triangle", "mixed"]
+  const validEstimates = ["short", "average", "tall"]
+  const validLines = ["curved", "straight", "mixed"]
+  const validWidths = ["narrow", "average", "wide"]
+
+  return (
+    validBodyTypes.includes(data.body_type) &&
+    validEstimates.includes(data.height_estimate) &&
+    validLines.includes(data.dominant_lines) &&
+    validWidths.includes(data.shoulder_width) &&
+    validWidths.includes(data.hip_width)
+  )
+}
+
 export async function POST(req) {
   try {
     const body = await req.json()
     const {
-      bodyPhoto, // imagem do corpo (obrigatória)
-      facePhoto, // imagem do rosto (obrigatória)
+      bodyPhoto,
+      facePhoto,
       height,
       weight,
-      alreadyAnalyzed, // flag vinda do frontend
+      alreadyAnalyzed,
     } = body
 
     console.log("[v0] 📸 Recebido - Body:", bodyPhoto?.length || 0, "bytes | Face:", facePhoto?.length || 0, "bytes")
@@ -57,9 +73,9 @@ export async function POST(req) {
     } else {
       try {
         // ===============================
-        // ETAPA 1 — VISION (ULTRA LEVE)
+        // ETAPA 1 — VISION (STRUCTURED OUTPUT)
         // ===============================
-        console.log("[v0] 🔍 Chamando Vision API...")
+        console.log("[v0] 🔍 Chamando Vision API com structured output...")
         const visionResponse = await getClient().chat.completions.create({
           model: "gpt-4o-mini",
           messages: [
@@ -68,20 +84,13 @@ export async function POST(req) {
               content: [
                 {
                   type: "text",
-                  text: `
-Analyze the person in the image.
-Return ONLY a valid JSON with these fields:
-
-{
- "body_type": "pear | hourglass | rectangle | inverted_triangle | mixed",
- "height_estimate": "short | average | tall",
- "dominant_lines": "curved | straight | mixed",
- "shoulder_width": "narrow | average | wide",
- "hip_width": "narrow | average | wide"
-}
-
-Return JSON only.
-                  `,
+                  text: `Analyze the person in the image.
+Return a JSON object with these exact fields:
+- body_type: one of "pear", "hourglass", "rectangle", "inverted_triangle", "mixed"
+- height_estimate: one of "short", "average", "tall"
+- dominant_lines: one of "curved", "straight", "mixed"
+- shoulder_width: one of "narrow", "average", "wide"
+- hip_width: one of "narrow", "average", "wide"`,
                 },
                 {
                   type: "image_url",
@@ -92,6 +101,7 @@ Return JSON only.
               ],
             },
           ],
+          response_format: { type: "json_object" },
           temperature: 0,
           max_tokens: 150,
         })
@@ -100,23 +110,21 @@ Return JSON only.
         console.log("[v0] 📄 Vision response:", raw)
 
         if (raw) {
-          const parsed = JSON.parse(raw)
-
-          // validação mínima
-          if (
-            parsed.body_type &&
-            parsed.height_estimate &&
-            parsed.dominant_lines &&
-            parsed.shoulder_width &&
-            parsed.hip_width
-          ) {
-            visionData = parsed
-            visionSucceeded = true
-            console.log("[v0] ✅ Vision succeeded:", visionData)
+          try {
+            const parsed = JSON.parse(raw)
+            if (validateVisionData(parsed)) {
+              visionData = parsed
+              visionSucceeded = true
+              console.log("[v0] ✅ Vision succeeded:", visionData)
+            } else {
+              console.warn("[v0] ⚠️ Vision response failed validation, using fallback")
+            }
+          } catch (parseErr) {
+            console.error("[v0] ⚠️ JSON parse failed:", parseErr.message)
           }
         }
       } catch (visionError) {
-        console.error("[v0] ❌ Vision falhou, usando fallback:", visionError)
+        console.error("[v0] ❌ Vision falhou, usando fallback:", visionError.message || visionError)
       }
     }
 
@@ -129,28 +137,29 @@ Return JSON only.
       messages: [
         {
           role: "system",
-          content: "You are a professional AI stylist. Be practical, specific and confident.",
+          content: "You are a professional AI stylist. Be practical, specific and confident. Always respond in Portuguese (BR).",
         },
         {
           role: "user",
           content: `
-User data:
-Body analysis (JSON): ${JSON.stringify(visionData)}
-Height: ${height}
-Weight: ${weight}
+Dados da usuária:
+Análise corporal: ${JSON.stringify(visionData)}
+Altura: ${height}cm
+Peso: ${weight}kg
 
-Task:
-1. Generate ONE complete outfit:
-   - Top
-   - Bottom
-   - Shoes
-   - Accessories (earrings type, bag style, shoes style)
-2. Briefly explain why this look works.
+Tarefa:
+1. Gere UM outfit completo:
+   - Top (cor, tecido, modelagem)
+   - Bottom (cor, tecido, modelagem)
+   - Sapatos
+   - Acessórios (brincos, bolsa, sapatos)
+2. Explique brevemente por que funciona para esse biotipo.
 
-Rules:
-- Be specific in colors, fabrics and shapes
-- Avoid generic words
-- Do NOT mention AI, analysis or data sources
+Regras:
+- Seja específica em cores, tecidos e formas
+- Evite generalizações
+- NÃO mencione IA, análise ou dados
+- Responda em português
           `,
         },
       ],
