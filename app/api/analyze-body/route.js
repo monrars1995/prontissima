@@ -128,66 +128,21 @@ Return a JSON object with these exact fields:
       }
     }
 
-    // ===============================
-    // ETAPA 2 — GPT TEXTO (SEM IMAGEM)
-    // ===============================
-    console.log("[v0] 🎨 Chamando GPT Stylist...")
-    const stylistResponse = await getClient().chat.completions.create({
-      model: "gpt-4o-mini",
-      messages: [
-        {
-          role: "system",
-          content: "You are a professional AI stylist. Be practical, specific and confident. Always respond in Portuguese (BR).",
-        },
-        {
-          role: "user",
-          content: `
-Dados da usuária:
-Análise corporal: ${JSON.stringify(visionData)}
-Altura: ${height}cm
-Peso: ${weight}kg
-
-Tarefa:
-1. Gere UM outfit completo:
-   - Top (cor, tecido, modelagem)
-   - Bottom (cor, tecido, modelagem)
-   - Sapatos
-   - Acessórios (brincos, bolsa, sapatos)
-2. Explique brevemente por que funciona para esse biotipo.
-
-Regras:
-- Seja específica em cores, tecidos e formas
-- Evite generalizações
-- NÃO mencione IA, análise ou dados
-- Responda em português
-          `,
-        },
-      ],
-      temperature: 0.7,
-      max_tokens: 400,
-    })
-
-    const stylistText = stylistResponse?.choices?.[0]?.message?.content || ""
-    console.log("[v0] ✅ Stylist response:", stylistText?.substring(0, 100) + "...")
-
+    // Retorna apenas dados da Vision — sem 2ª chamada OpenAI (stylist text nunca era exibido)
     return Response.json({
       success: true,
       visionData,
       visionSucceeded,
-      stylistText,
       height,
       weight,
     })
   } catch (error) {
-    // 🔥 ÚLTIMA LINHA DE DEFESA — NUNCA QUEBRA O APP
     console.error("[v0] ❌ Erro geral na análise:", error)
 
     return Response.json({
       success: true,
       visionData: FALLBACK_VISION_DATA,
       visionSucceeded: false,
-      stylistText:
-        "Preparei um look versátil e equilibrado que funciona bem para diferentes tipos de corpo e ocasiões.",
       source: "hard-fallback",
     })
   }

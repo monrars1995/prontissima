@@ -195,11 +195,11 @@ export default function ResultPage() {
   if (errorState) {
     const wardrobeStatus = checkWardrobeIssue()
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center p-6">
-        <div className="max-w-md w-full bg-red-50 border-2 border-red-200 rounded-3xl p-8 text-center space-y-4">
+      <div className="min-h-screen bg-[#FDF9F5] flex items-center justify-center p-6">
+        <div className="max-w-md w-full bg-white/80 backdrop-blur-sm border border-[#E8DFD6] rounded-3xl p-8 text-center space-y-4">
           <div className="text-6xl">X</div>
-          <h1 className="text-2xl font-bold text-red-900">Erro ao Criar Look</h1>
-          <p className="text-lg text-red-700 font-mono bg-red-100 p-3 rounded-lg">{errorMessage}</p>
+          <h1 className="text-2xl font-display text-[#5C1F33]">Erro ao Criar Look</h1>
+          <p className="text-sm text-[#3E261E]/70 bg-[#5C1F33]/5 p-3 rounded-lg">{errorMessage}</p>
 
           {wardrobeStatus.needsFix ? (
             <>
@@ -250,8 +250,12 @@ export default function ResultPage() {
   // ============= RENDER ============= //
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
-      <div className="max-w-2xl mx-auto p-6 space-y-6">
+    <div className="min-h-screen bg-[#FDF9F5] flex flex-col">
+      {/* Ambient gradient */}
+      <div className="absolute top-0 left-0 right-0 h-60 pointer-events-none"
+        style={{ background: "linear-gradient(180deg, rgba(92,31,51,0.06) 0%, rgba(184,134,11,0.02) 40%, transparent 100%)" }}
+      />
+      <div className="max-w-2xl mx-auto p-6 space-y-6 relative z-10">
         <div className="flex items-center justify-between mb-6">
           <AppLogo size="medium" />
         </div>
@@ -260,17 +264,17 @@ export default function ResultPage() {
 
         {/* Header */}
         <div className="space-y-2 text-center">
-          <h1 className="text-4xl font-semibold tracking-tight text-foreground">Seus looks estão prontos</h1>
-          <p className="text-xl text-muted-foreground">
+          <h1 className="text-3xl font-display text-[#3E261E] tracking-tight">Seus looks estão prontos</h1>
+          <p className="text-base text-[#C9B8A8]">
             {lookData.mood} • {lookData.occasion}
           </p>
           {credits !== null && credits <= 1 && (
-            <div className="bg-amber-50 border-2 border-amber-300 rounded-xl p-4 mt-4">
-              <p className="text-base text-amber-800 font-semibold">
-                ⚠️ Atenção: Você tem apenas {credits} {credits === 1 ? "crédito restante" : "créditos restantes"}
+            <div className="bg-[#B8860B]/5 border border-[#B8860B]/20 rounded-xl p-4 mt-4">
+              <p className="text-sm text-[#B8860B] font-semibold">
+                ⚠️ {credits} {credits === 1 ? "crédito restante" : "créditos restantes"}
               </p>
-              <p className="text-sm text-amber-700 mt-1">
-                Compre mais créditos para continuar criando looks incríveis!
+              <p className="text-xs text-[#C9B8A8] mt-1">
+                Compre mais créditos para continuar criando looks
               </p>
             </div>
           )}
