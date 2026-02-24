@@ -1,8 +1,10 @@
-import OpenAI from "openai"
+import { GoogleGenAI } from "@google/genai"
 
-// Lazy init — avoid crashing at build time when OPENAI_API_KEY is absent
+// Lazy init — avoid crashing at build time when GEMINI_API_KEY is absent
 function getClient() {
-  return new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
+  const apiKey = process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY
+  if (!apiKey) return null
+  return new GoogleGenAI({ apiKey })
 }
 
 /**
@@ -15,6 +17,39 @@ const FALLBACK_VISION_DATA = {
   dominant_lines: "mixed",
   shoulder_width: "average",
   hip_width: "average",
+}
+
+// JSON Schema for structured output
+const bodyAnalysisSchema = {
+  type: "object",
+  properties: {
+    body_type: {
+      type: "string",
+      enum: ["pear", "hourglass", "rectangle", "inverted_triangle", "mixed"],
+      description: "Body type classification",
+    },
+    height_estimate: {
+      type: "string",
+      enum: ["short", "average", "tall"],
+      description: "Height estimate based on proportions",
+    },
+    dominant_lines: {
+      type: "string",
+      enum: ["curved", "straight", "mixed"],
+      description: "Dominant body lines",
+    },
+    shoulder_width: {
+      type: "string",
+      enum: ["narrow", "average", "wide"],
+      description: "Shoulder width classification",
+    },
+    hip_width: {
+      type: "string",
+      enum: ["narrow", "average", "wide"],
+      description: "Hip width classification",
+    },
+  },
+  required: ["body_type", "height_estimate", "dominant_lines", "shoulder_width", "hip_width"],
 }
 
 // Valida campos do resultado vision
@@ -33,19 +68,21 @@ function validateVisionData(data) {
   )
 }
 
+// Extrai base64 puro de um data URL
+function extractBase64(dataUrl) {
+  if (!dataUrl) return null
+  // Remove "data:image/jpeg;base64," prefix
+  const match = dataUrl.match(/^data:image\/[a-z]+;base64,(.+)$/i)
+  return match ? match[1] : dataUrl
+}
+
 export async function POST(req) {
   try {
     const body = await req.json()
-    const {
-      bodyPhoto,
-      facePhoto,
-      height,
-      weight,
-      alreadyAnalyzed,
-    } = body
+    const { bodyPhoto, facePhoto, height, weight, alreadyAnalyzed } = body
 
-    console.log("[v0] 📸 Recebido - Body:", bodyPhoto?.length || 0, "bytes | Face:", facePhoto?.length || 0, "bytes")
-    console.log("[v0] 📏 Height:", height, "cm | Weight:", weight, "kg")
+    console.log("[GEMINI] 📸 Recebido - Body:", bodyPhoto?.length || 0, "bytes | Face:", facePhoto?.length || 0, "bytes")
+    console.log("[GEMINI] 📏 Height:", height, "cm | Weight:", weight, "kg")
 
     // 🔒 KILL SWITCH — nunca chamar Vision duas vezes
     if (alreadyAnalyzed === true) {
@@ -59,76 +96,78 @@ export async function POST(req) {
     let visionData = FALLBACK_VISION_DATA
     let visionSucceeded = false
 
+    const client = getClient()
+
     // 🔒 Se não houver API KEY, NÃO tenta Vision
-    if (!process.env.OPENAI_API_KEY) {
-      console.warn("[v0] ⚠️ OPENAI_API_KEY ausente — usando fallback")
+    if (!client) {
+      console.warn("[GEMINI] ⚠️ GEMINI_API_KEY ausente — usando fallback")
       return Response.json({
         success: true,
         visionData: FALLBACK_VISION_DATA,
         visionSucceeded: false,
-        stylistText:
-          "Preparei um look versátil e equilibrado que funciona bem para diferentes tipos de corpo e ocasiões.",
         source: "no-api-key",
       })
-    } else {
-      try {
-        // ===============================
-        // ETAPA 1 — VISION (STRUCTURED OUTPUT)
-        // ===============================
-        console.log("[v0] 🔍 Chamando Vision API com structured output...")
-        const visionResponse = await getClient().chat.completions.create({
-          model: "gpt-4o-mini",
-          messages: [
-            {
-              role: "user",
-              content: [
-                {
-                  type: "text",
-                  text: `Analyze the person in the image.
-Return a JSON object with these exact fields:
-- body_type: one of "pear", "hourglass", "rectangle", "inverted_triangle", "mixed"
-- height_estimate: one of "short", "average", "tall"
-- dominant_lines: one of "curved", "straight", "mixed"
-- shoulder_width: one of "narrow", "average", "wide"
-- hip_width: one of "narrow", "average", "wide"`,
-                },
-                {
-                  type: "image_url",
-                  image_url: {
-                    url: bodyPhoto,
-                  },
-                },
-              ],
-            },
-          ],
-          response_format: { type: "json_object" },
-          temperature: 0,
-          max_tokens: 150,
-        })
-
-        const raw = visionResponse?.choices?.[0]?.message?.content
-        console.log("[v0] 📄 Vision response:", raw)
-
-        if (raw) {
-          try {
-            const parsed = JSON.parse(raw)
-            if (validateVisionData(parsed)) {
-              visionData = parsed
-              visionSucceeded = true
-              console.log("[v0] ✅ Vision succeeded:", visionData)
-            } else {
-              console.warn("[v0] ⚠️ Vision response failed validation, using fallback")
-            }
-          } catch (parseErr) {
-            console.error("[v0] ⚠️ JSON parse failed:", parseErr.message)
-          }
-        }
-      } catch (visionError) {
-        console.error("[v0] ❌ Vision falhou, usando fallback:", visionError.message || visionError)
-      }
     }
 
-    // Retorna apenas dados da Vision — sem 2ª chamada OpenAI (stylist text nunca era exibido)
+    try {
+      // ===============================
+      // GEMINI 3 FLASH — VISION + STRUCTURED OUTPUT
+      // ===============================
+      console.log("[GEMINI] 🔍 Chamando Gemini 3 Flash Vision...")
+
+      const base64Data = extractBase64(bodyPhoto)
+      if (!base64Data) {
+        console.error("[GEMINI] ❌ Foto sem dados base64 válidos")
+        throw new Error("Invalid base64 data")
+      }
+
+      const response = await client.models.generateContent({
+        model: "gemini-3-flash-preview",
+        contents: [
+          {
+            inlineData: {
+              mimeType: "image/jpeg",
+              data: base64Data,
+            },
+          },
+          {
+            text: `Analyze the person in this photo and classify their body type.
+Return a JSON object with these fields:
+- body_type: pear, hourglass, rectangle, inverted_triangle, or mixed
+- height_estimate: short, average, or tall
+- dominant_lines: curved, straight, or mixed
+- shoulder_width: narrow, average, or wide
+- hip_width: narrow, average, or wide`,
+          },
+        ],
+        config: {
+          responseMimeType: "application/json",
+          responseJsonSchema: bodyAnalysisSchema,
+          temperature: 0,
+        },
+      })
+
+      const raw = response.text
+      console.log("[GEMINI] 📄 Vision response:", raw)
+
+      if (raw) {
+        try {
+          const parsed = JSON.parse(raw)
+          if (validateVisionData(parsed)) {
+            visionData = parsed
+            visionSucceeded = true
+            console.log("[GEMINI] ✅ Vision succeeded:", visionData)
+          } else {
+            console.warn("[GEMINI] ⚠️ Response failed validation, using fallback")
+          }
+        } catch (parseErr) {
+          console.error("[GEMINI] ⚠️ JSON parse failed:", parseErr.message)
+        }
+      }
+    } catch (visionError) {
+      console.error("[GEMINI] ❌ Vision falhou:", visionError.message || visionError)
+    }
+
     return Response.json({
       success: true,
       visionData,
@@ -137,7 +176,7 @@ Return a JSON object with these exact fields:
       weight,
     })
   } catch (error) {
-    console.error("[v0] ❌ Erro geral na análise:", error)
+    console.error("[GEMINI] ❌ Erro geral:", error)
 
     return Response.json({
       success: true,

@@ -1,43 +1,38 @@
-# Como Configurar a API Key do OpenAI
+# Como Configurar a API Key do Gemini
 
-O VEST.AI usa GPT-4o Vision para analisar as peças e criar looks profissionais.
+O Prontíssima usa **Gemini 3 Flash** para analisar fotos do corpo e criar looks personalizados.
 
-## Passo 1: Adicionar a API Key
+## Passo 1: Obter a API Key
 
-1. Clique em "Vars" na barra lateral esquerda do v0
-2. Adicione uma nova variável:
-   - Nome: `OPENAI_API_KEY`
-   - Valor: sua chave da OpenAI (começa com `sk-`)
-3. Salve
+1. Acesse [Google AI Studio](https://aistudio.google.com/apikey)
+2. Crie uma nova API Key (é **gratuita** para uso moderado)
+3. Copie a chave gerada
 
-## Passo 2: Resetar o App
+## Passo 2: Adicionar a API Key
 
-1. Na tela de onboarding, clique no botão vermelho "RESET" no canto superior direito
-2. Isso vai limpar todas as peças antigas (que não têm descrição)
+### No desenvolvimento local:
+1. Copie `.env.example` para `.env`
+2. Cole sua chave em `GEMINI_API_KEY=sua-chave-aqui`
 
-## Passo 3: Fazer Upload Novamente
+### No Vercel:
+1. Vá em Settings → Environment Variables
+2. Adicione `GEMINI_API_KEY` com o valor da chave
 
-1. Faça upload de 3-5 peças
-2. **IMPORTANTE**: Selecione o tipo de cada peça (calça, blusa, vestido, etc)
-3. Continue o fluxo normalmente
+## Passo 3: Testar
 
-## Por que as descrições são importantes?
+Acesse `/api/test-openai` no navegador. Se funcionar, vai retornar:
 
-O GPT-4o Vision precisa das descrições para:
-- Classificar tops e bottoms corretamente
-- Evitar combinações impossíveis (ex: 2 calças juntas)
-- Criar looks que fazem sentido
+```json
+{
+  "success": true,
+  "message": "Gemini 3 Flash está funcionando!",
+  "model": "gemini-3-flash-preview"
+}
+```
 
-## Testando se está funcionando
+## Por que Gemini em vez de OpenAI?
 
-Quando o GPT-4o Vision funcionar, você verá nos logs:
-\`\`\`
-[v0] GPT-4o Vision response: {...}
-\`\`\`
-
-Se ainda aparecer:
-\`\`\`
-[v0] Error generating look: Gateway request failed: fetch failed
-\`\`\`
-
-A API key pode estar incorreta ou não foi adicionada.
+- **Gratuito** para uso moderado (vs $0.03/chamada no GPT-4o-mini)
+- **1M tokens de contexto** — analisa fotos em alta resolução
+- **Structured outputs** nativos — JSON sempre válido
+- **Mais rápido** para análise de imagem

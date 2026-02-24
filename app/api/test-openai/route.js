@@ -1,37 +1,41 @@
-import { generateText } from "ai"
+import { GoogleGenAI } from "@google/genai"
 
 export async function GET() {
   try {
-    console.log("[v0] Testing OpenAI API connection...")
+    const apiKey = process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY
+    if (!apiKey) {
+      return Response.json({
+        success: false,
+        error: "GEMINI_API_KEY não configurada",
+        message: "Adicione GEMINI_API_KEY no .env ou nas variáveis de ambiente",
+      }, { status: 500 })
+    }
 
-    const { text } = await generateText({
-      model: "openai/gpt-4o",
-      messages: [
-        {
-          role: "user",
-          content: "Responda apenas com: OK",
-        },
-      ],
-      maxTokens: 10,
+    console.log("[GEMINI] Testing Gemini 3 Flash connection...")
+
+    const ai = new GoogleGenAI({ apiKey })
+    const response = await ai.models.generateContent({
+      model: "gemini-3-flash-preview",
+      contents: "Responda apenas com: OK",
+      config: { maxOutputTokens: 10, temperature: 0 },
     })
 
-    console.log("[v0] OpenAI API test successful:", text)
+    const text = response.text
+    console.log("[GEMINI] Test successful:", text)
 
     return Response.json({
       success: true,
-      message: "OpenAI API está funcionando!",
+      message: "Gemini 3 Flash está funcionando!",
+      model: "gemini-3-flash-preview",
       response: text,
     })
   } catch (error) {
-    console.error("[v0] OpenAI API test failed:", error.message)
+    console.error("[GEMINI] Test failed:", error.message)
 
-    return Response.json(
-      {
-        success: false,
-        error: error.message,
-        message: "OPENAI_API_KEY não está configurada ou é inválida. Adicione em Vars > OPENAI_API_KEY",
-      },
-      { status: 500 },
-    )
+    return Response.json({
+      success: false,
+      error: error.message,
+      message: "GEMINI_API_KEY inválida ou sem permissão. Verifique em https://aistudio.google.com/apikey",
+    }, { status: 500 })
   }
 }
